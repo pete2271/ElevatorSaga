@@ -28,13 +28,13 @@
                 
                 if (elevator.loadFactor() > LOAD_FACTOR_THRESH) {
                     let pressedFloor = elevator.getPressedFloors()[0];
-                    requestHistogram[pressedFloor] = 0;
-                    elevator.goToFloor(pressedFloor);
+                    
+                    if (pressedFloor != elevator.currentFloor()){
+                        requestHistogram[pressedFloor] = 0;
+                        elevator.goToFloor(pressedFloor);
+                    }
                 }
                 else {
-                    // Base behavior if no other checks hit.
-                    let nextFloor = requestHistogram.indexOf(Math.max())
-
                     var max = 0;
                     var maxIndex = 0;
                     
@@ -46,15 +46,17 @@
                         }
                     }
                     
-                    requestHistogram[maxIndex] = 0;
-                    elevator.goToFloor(maxIndex);    
+                    if (maxIndex != elevator.currentFloor()){
+                        requestHistogram[maxIndex] = 0;
+                        elevator.goToFloor(maxIndex);    
+                    }
                 }
                 
             });
         }
         
         floors.map(SetPressedBehaviors);
-        elevators.map(SetPassingBehavior);
+        //elevators.map(SetPassingBehavior);
         elevators.map(SetIdleBehavior);
     },
         
