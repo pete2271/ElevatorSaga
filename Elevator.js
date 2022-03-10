@@ -16,7 +16,7 @@
         
         function SetPassingBehavior(elevator) {
             elevator.on("passing_floor", function(floorNum, direction) {
-                if (elevator.getPressedFloors().includes(floorNum)){
+                if (elevator.getPressedFloors().includes(floorNum) || requestHistogram[floorNum] > 0){
                     requestHistogram[floorNum] = 0;
                     elevator.goToFloor(floorNum);
                 }
@@ -26,8 +26,8 @@
         function SetIdleBehavior(elevator) {
             elevator.on("idle", function() {
                 
-                if (elevator.loadFactor() > LOAD_FACTOR_THRESH && elevator.getPressedFloors().length > 0) {
-                    let pressedFloor = elevator.getPressedFloors()[0];
+                if ((elevator.loadFactor() > LOAD_FACTOR_THRESH) && (elevator.getPressedFloors().length > 0)) {
+                    let pressedFloor = elevator.getPressedFloors()[elevator.getPressedFloors().length - 1];
                     
                     if (pressedFloor != elevator.currentFloor()){
                         requestHistogram[pressedFloor] = 0;
@@ -56,7 +56,7 @@
         }
         
         floors.map(SetPressedBehaviors);
-        //elevators.map(SetPassingBehavior);
+        elevators.map(SetPassingBehavior);
         elevators.map(SetIdleBehavior);
     },
         
