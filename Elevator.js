@@ -14,6 +14,15 @@
             });
         }
         
+        function SetPassingBehavior(elevator) {
+            elevator.on("passing_floor", function(floorNum, direction) {
+                if (elevator.getPressedFloors().includes(floorNum)){
+                    requestHistogram[floorNum] = 0;
+                    elevator.goToFloor(floorNum);
+                }
+            });    
+        }
+        
         function SetIdleBehavior(elevator) {
             elevator.on("idle", function() {
                 
@@ -45,6 +54,7 @@
         }
         
         floors.map(SetPressedBehaviors);
+        elevators.map(SetPassingBehavior);
         elevators.map(SetIdleBehavior);
     },
         
